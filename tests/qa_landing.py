@@ -31,7 +31,8 @@ def inspect_page(page, name: str):
           formExists: Boolean(document.querySelector('#lead-form')),
           formVisible: Boolean(document.querySelector('#lead-form')?.getBoundingClientRect().width),
           headerPosition: getComputedStyle(document.querySelector('[data-header]')).position,
-          headerTop: document.querySelector('[data-header]').getBoundingClientRect().top
+          headerTop: document.querySelector('[data-header]').getBoundingClientRect().top,
+          headerHeight: document.querySelector('[data-header]').getBoundingClientRect().height
         })"""
     )
 
@@ -41,6 +42,7 @@ def inspect_page(page, name: str):
     assert metrics["formExists"] and metrics["formVisible"]
     assert metrics["headerPosition"] == "fixed", metrics["headerPosition"]
     assert abs(metrics["headerTop"]) <= 1
+    assert metrics["headerHeight"] <= (90 if page.viewport_size["width"] <= 820 else 96), metrics["headerHeight"]
     assert metrics["overflow"] <= 1, f"{name}: horizontal overflow {metrics['overflow']}px; {metrics['offenders']}"
     assert all(item["ok"] for item in metrics["images"]), metrics["images"]
     assert all(item["alt"] for item in metrics["images"]), metrics["images"]
@@ -82,6 +84,9 @@ def main():
         desktop.locator("#price").scroll_into_view_if_needed()
         desktop.wait_for_timeout(250)
         assert abs(desktop.locator("[data-header]").bounding_box()["y"]) <= 1
+        assert desktop.locator("[data-header]").bounding_box()["height"] <= 96
+        desktop.wait_for_timeout(500)
+        assert desktop.locator("[data-header]").bounding_box()["height"] <= 96
         assert desktop.locator("[data-nav-section='price']").get_attribute("aria-current") == "location"
         desktop.screenshot(path=PREVIEW / "desktop-header-scrolled.png")
         desktop.goto(BASE_URL, wait_until="networkidle")
@@ -128,6 +133,7 @@ def main():
         mobile.locator("#request").scroll_into_view_if_needed()
         mobile.wait_for_timeout(200)
         assert abs(mobile.locator("[data-header]").bounding_box()["y"]) <= 1
+        assert mobile.locator("[data-header]").bounding_box()["height"] <= 90
         mobile.add_style_tag(content=".site-header{position:absolute!important}.mobile-cta{display:none!important}.js [data-reveal]{opacity:1!important;transform:none!important;transition:none!important}")
         mobile.wait_for_timeout(100)
         mobile.screenshot(path=PREVIEW / "mobile-full.png", full_page=True)

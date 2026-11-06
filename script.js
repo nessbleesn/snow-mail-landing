@@ -22,11 +22,6 @@
     node.textContent = String(new Date().getFullYear());
   });
 
-  function syncHeaderHeight() {
-    if (!header) return;
-    document.documentElement.style.setProperty("--topbar-h", `${Math.ceil(header.getBoundingClientRect().height)}px`);
-  }
-
   function updateActiveSection() {
     if (!navSections.length) return;
     const line = (header?.getBoundingClientRect().height || 0) + Math.min(window.innerHeight * 0.22, 180);
@@ -49,12 +44,6 @@
   function updateScrollState() {
     header?.classList.toggle("is-scrolled", window.scrollY > 18);
     updateActiveSection();
-  }
-
-  if (header) {
-    syncHeaderHeight();
-    if ("ResizeObserver" in window) new ResizeObserver(syncHeaderHeight).observe(header);
-    window.addEventListener("resize", syncHeaderHeight, { passive: true });
   }
 
   let scrollFrame = 0;

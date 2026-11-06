@@ -1657,20 +1657,21 @@ a {
 
 :root {
   --topbar-h: 5rem;
+  --topbar-total-h: calc(var(--topbar-h) + env(safe-area-inset-top));
   --layer-header: 100;
   --hero-pointer-x: 0px;
   --hero-pointer-y: 0px;
 }
 
 html {
-  scroll-padding-top: calc(var(--topbar-h) + 1.25rem);
+  scroll-padding-top: calc(var(--topbar-total-h) + 1.25rem);
 }
 
 #story,
 #program,
 #price,
 #request {
-  scroll-margin-top: calc(var(--topbar-h) + 1.25rem);
+  scroll-margin-top: calc(var(--topbar-total-h) + 1.25rem);
 }
 
 .site-header {
@@ -1678,7 +1679,8 @@ html {
   inset: 0 0 auto;
   z-index: var(--layer-header);
   width: 100%;
-  min-height: var(--topbar-h);
+  min-height: 0;
+  height: var(--topbar-total-h);
   display: block;
   margin: 0;
   padding: env(safe-area-inset-top) var(--gutter) 0;
@@ -1701,7 +1703,8 @@ html {
 
 .site-header__inner {
   width: min(100%, var(--page-max));
-  min-height: calc(var(--topbar-h) - env(safe-area-inset-top));
+  min-height: 0;
+  height: var(--topbar-h);
   display: grid;
   grid-template-columns: auto minmax(18rem, 1fr) auto auto;
   align-items: center;
@@ -1871,7 +1874,7 @@ html {
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
   margin-inline: auto;
-  padding: calc(var(--topbar-h) + clamp(3.5rem, 8vh, 6rem)) 0 clamp(4rem, 8vh, 6rem);
+  padding: calc(var(--topbar-total-h) + clamp(3.5rem, 8vh, 6rem)) 0 clamp(4rem, 8vh, 6rem);
 }
 
 .hero__content {
@@ -2136,12 +2139,14 @@ html {
 
   .site-header {
     inset: 0 0 auto;
-    min-height: var(--topbar-h);
+    min-height: 0;
+    height: var(--topbar-total-h);
     padding: env(safe-area-inset-top) 0.85rem 0;
   }
 
   .site-header__inner {
-    min-height: calc(var(--topbar-h) - env(safe-area-inset-top));
+    min-height: 0;
+    height: var(--topbar-h);
     grid-template-columns: auto 1fr auto;
     gap: 0.8rem;
   }
