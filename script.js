@@ -220,7 +220,7 @@
 
       if (!form.checkValidity()) {
         form.reportValidity();
-        setStatus("Проверьте обязательные поля — некоторые данные ещё не заполнены.", "error");
+        setStatus("Заполните обязательные поля.", "error");
         return;
       }
 
@@ -233,9 +233,9 @@
       try {
         const result = await submitLead(serializeForm(form));
         if (result.demo) {
-          setStatus("Спасибо! Заявка сохранена в демо-режиме. Перед публикацией подключим отправку в CRM.", "success");
+          setStatus("Демо-режим: заявка сохранена только в этом браузере.", "success");
         } else {
-          setStatus("Заявка отправлена. Мы свяжемся с вами, чтобы подтвердить дату и детали.", "success");
+          setStatus("Заявка отправлена. Менеджер свяжется с вами, чтобы подтвердить дату и детали.", "success");
           form.reset();
           captureAttribution();
         }
