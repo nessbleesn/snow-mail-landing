@@ -20,7 +20,7 @@ def inspect_page(page, name: str):
         """() => ({
           title: document.title,
           h1: document.querySelector('h1')?.innerText,
-          images: [...document.images].map(img => ({src: img.getAttribute('src'), alt: img.alt, ok: img.complete && img.naturalWidth > 0})),
+          images: [...document.images].map(img => ({src: img.getAttribute('src'), alt: img.alt, hasAlt: img.hasAttribute('alt'), ok: img.complete && img.naturalWidth > 0})),
           buttons: [...document.querySelectorAll('button, a.button')].map(el => el.textContent.trim()),
           overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
           offenders: [...document.querySelectorAll('body *')]
@@ -47,7 +47,7 @@ def inspect_page(page, name: str):
     assert metrics["headerHeight"] <= (90 if page.viewport_size["width"] <= 820 else 96), metrics["headerHeight"]
     assert metrics["overflow"] <= 1, f"{name}: horizontal overflow {metrics['overflow']}px; {metrics['offenders']}"
     assert all(item["ok"] for item in metrics["images"]), metrics["images"]
-    assert all(item["alt"] for item in metrics["images"]), metrics["images"]
+    assert all(item["hasAlt"] for item in metrics["images"]), metrics["images"]
     return metrics
 
 
@@ -158,6 +158,8 @@ def main():
         reference = reference_context.new_page()
         results["reference_1047"] = inspect_page(reference, "reference_1047")
         assert reference.locator(".dispatch-card").count() == 0
+        assert reference.locator(".hero__liquid-decor").count() == 1
+        assert reference.locator(".liquid-bauble").count() == 3
         assert reference.get_by_role("heading", name="Три аниматора").count() == 1
         assert reference.get_by_role("img", name="Иллюстрация новогоднего сладкого подарка в красном мешочке").count() == 1
         assert reference.locator(".scroll-progress, .hero__availability, .hero__facts, .hero__edge-label, .hero__flight-path, .hero-marquee").count() == 0
@@ -172,7 +174,23 @@ def main():
         narrow = narrow_context.new_page()
         results["narrow_reduced"] = inspect_page(narrow, "narrow_reduced")
         assert narrow.locator("[data-reveal]").first.is_visible()
+        assert narrow.locator(".liquid-bauble--ice").evaluate("el => getComputedStyle(el).animationName") == "none"
+        assert narrow.locator(".liquid-bauble--ice").evaluate("el => getComputedStyle(el).opacity") == "1"
         narrow_context.close()
+
+        stress_context = browser.new_context(viewport={"width": 320, "height": 720})
+        stress = stress_context.new_page()
+        results["stress_320"] = inspect_page(stress, "stress_320")
+        assert stress.locator(".liquid-bauble--ice").is_visible()
+        assert stress.locator(".liquid-bauble--cranberry").is_hidden()
+        assert stress.locator(".liquid-bauble--gold").is_hidden()
+        stress_context.close()
+
+        forced_context = browser.new_context(viewport={"width": 390, "height": 844}, forced_colors="active")
+        forced = forced_context.new_page()
+        forced.goto(BASE_URL, wait_until="networkidle")
+        assert forced.locator(".hero__liquid-decor").is_hidden()
+        forced_context.close()
 
         no_js_context = browser.new_context(viewport={"width": 390, "height": 844}, java_script_enabled=False)
         no_js = no_js_context.new_page()
