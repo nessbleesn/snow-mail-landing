@@ -28,6 +28,7 @@ def inspect_page(page, name: str):
             .filter(item => item.left < -1 || item.right > document.documentElement.clientWidth + 1)
             .slice(0, 12),
           h2Count: document.querySelectorAll('h2').length,
+          headings: [...document.querySelectorAll('h1, h2, h3')].map(el => el.textContent.trim()),
           formExists: Boolean(document.querySelector('#lead-form')),
           formVisible: Boolean(document.querySelector('#lead-form')?.getBoundingClientRect().width),
           headerPosition: getComputedStyle(document.querySelector('[data-header]')).position,
@@ -39,6 +40,7 @@ def inspect_page(page, name: str):
     assert metrics["title"] and len(metrics["title"]) > 12
     assert metrics["h1"] and len(metrics["h1"].split()) >= 2
     assert metrics["h2Count"] >= 6
+    assert all(not heading.endswith(".") and ". " not in heading for heading in metrics["headings"]), metrics["headings"]
     assert metrics["formExists"] and metrics["formVisible"]
     assert metrics["headerPosition"] == "fixed", metrics["headerPosition"]
     assert abs(metrics["headerTop"]) <= 1
@@ -156,6 +158,8 @@ def main():
         reference = reference_context.new_page()
         results["reference_1047"] = inspect_page(reference, "reference_1047")
         assert reference.locator(".dispatch-card").count() == 0
+        assert reference.get_by_role("heading", name="Три аниматора").count() == 1
+        assert reference.get_by_role("img", name="Иллюстрация новогоднего сладкого подарка в красном мешочке").count() == 1
         assert reference.locator(".scroll-progress, .hero__availability, .hero__facts, .hero__edge-label, .hero__flight-path, .hero-marquee").count() == 0
         media_box = reference.locator(".hero__media").bounding_box()
         title_box = reference.locator("#event-title").bounding_box()

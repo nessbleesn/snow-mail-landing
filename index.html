@@ -13,7 +13,7 @@
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="assets/fonts/onest-400.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="assets/snow-mail-hero.jpg" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20261106-3">
+  <link rel="stylesheet" href="styles.css?v=20261106-6">
 </head>
 <body>
   <a class="skip-link" href="#main">К содержанию</a>
@@ -67,18 +67,24 @@
       <div class="section-shell intro__grid">
         <p class="section-kicker">Праздник с сюжетом</p>
         <div>
-          <h2 id="intro-title">Дети помогают<br><em>празднику состояться</em></h2>
-          <p>Участники выполняют задания и вместе доводят историю до финала.</p>
+          <h2 id="intro-title">Дети работают на <em>новогодней почте</em></h2>
+          <p>Ребята разбирают письма, проходят испытания и находят адресатов вместе с героями квеста.</p>
         </div>
       </div>
     </section>
 
     <section class="story" id="story" aria-labelledby="story-title">
       <div class="section-shell">
-        <div class="section-heading" data-reveal>
-          <p class="section-kicker section-kicker--light">Сюжет квеста</p>
-          <h2 id="story-title">На новогодней почте<br>случился <span>переполох</span></h2>
-          <p>Заяц-почтальон, Снеговик-сортировщик, Оленёнок и Дед Мороз собирают команду ребят, чтобы праздник состоялся.</p>
+        <div class="story__lead">
+          <div class="section-heading" data-reveal>
+            <p class="section-kicker section-kicker--light">Сюжет квеста</p>
+            <h2 id="story-title">Переполох на <span>новогодней почте</span></h2>
+            <p>Заяц-почтальон, Снеговик-сортировщик и Оленёнок зовут ребят на помощь. В финале команду встречает Дед Мороз.</p>
+          </div>
+          <figure class="story-scene" data-reveal>
+            <img src="assets/snow-mail-letters.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Конверты и подарки на столе новогодней почты">
+            <figcaption><span>Входящее</span> Письма перепутались</figcaption>
+          </figure>
         </div>
 
         <ol class="route" aria-label="Этапы квеста">
@@ -103,8 +109,8 @@
           <li class="route__step" data-reveal>
             <span class="route__number">04</span>
             <div class="route__icon" aria-hidden="true">★</div>
-            <h3>Спасти праздник</h3>
-            <p>Доставить подарки адресатам и завершить квест вместе с героями.</p>
+            <h3>Доставить подарки</h3>
+            <p>Передать подарки адресатам и завершить квест вместе с героями.</p>
           </li>
         </ol>
       </div>
@@ -115,35 +121,43 @@
         <div class="section-heading section-heading--split" data-reveal>
           <div>
             <p class="section-kicker">Что входит</p>
-            <h2 id="program-title">Всё для праздника<br>уже в программе</h2>
+            <h2 id="program-title">Что входит в программу квеста</h2>
           </div>
-          <p>Квест ведут четыре персонажа. В программу входят мастер-класс, сладкий подарок, банкетный стол с напитками и поздравление Деда Мороза.</p>
+          <p>Квест ведут три аниматора. В программу входят мастер-класс, сладкий подарок, банкетный стол с напитками и поздравление Деда Мороза.</p>
         </div>
 
         <div class="program-grid">
           <article class="program-card program-card--blue" data-reveal>
-            <span class="program-card__mark" aria-hidden="true">4×</span>
-            <p class="program-card__label">Живой сюжет</p>
-            <h3>Четыре аниматора</h3>
-            <p>Четыре персонажа ведут квест, объясняют задания и помогают команде.</p>
+            <span class="program-card__mark" aria-hidden="true">3×</span>
+            <div class="program-card__content">
+              <p class="program-card__label">Живой сюжет</p>
+              <h3>Три аниматора</h3>
+              <p>Герои ведут квест, объясняют задания и помогают команде.</p>
+            </div>
           </article>
-          <article class="program-card program-card--paper" data-reveal>
-            <span class="program-card__mark" aria-hidden="true">✂</span>
-            <p class="program-card__label">Своими руками</p>
-            <h3>Новогодняя открытка</h3>
-            <p>На мастер-классе ребёнок создаёт новогоднюю открытку и забирает её домой.</p>
+          <article class="program-card program-card--paper program-card--photo" data-reveal>
+            <img class="program-card__photo" src="assets/snow-mail-workshop.jpg" width="1200" height="900" loading="lazy" decoding="async" alt="Ребёнок делает новогоднюю открытку">
+            <div class="program-card__content">
+              <p class="program-card__label">Своими руками</p>
+              <h3>Новогодняя открытка</h3>
+              <p>На мастер-классе ребёнок создаёт открытку и забирает её домой.</p>
+            </div>
           </article>
           <article class="program-card program-card--red" data-reveal>
-            <span class="program-card__mark" aria-hidden="true">↟</span>
-            <p class="program-card__label">Финал квеста</p>
-            <h3>Сладкий подарок</h3>
-            <p>В финале каждый участник получает персональный новогодний сладкий набор.</p>
+            <img class="program-card__gift" src="assets/snow-mail-sweet-gift-2d.png" width="760" height="760" loading="lazy" decoding="async" alt="Иллюстрация новогоднего сладкого подарка в красном мешочке">
+            <div class="program-card__content">
+              <p class="program-card__label">Финал квеста</p>
+              <h3>Сладкий подарок</h3>
+              <p>Каждый участник получает персональный новогодний сладкий набор.</p>
+            </div>
           </article>
-          <article class="program-card program-card--ice" data-reveal>
-            <span class="program-card__mark" aria-hidden="true">☕</span>
-            <p class="program-card__label">Тёплая зона</p>
-            <h3>Стол и поздравление</h3>
-            <p>После квеста дети отдыхают за банкетным столом с напитками. Там же их поздравляет Дед Мороз.</p>
+          <article class="program-card program-card--ice program-card--photo" data-reveal>
+            <img class="program-card__photo" src="assets/snow-mail-finale.jpg" width="1200" height="900" loading="lazy" decoding="async" alt="Дед Мороз вручает ребёнку подарок">
+            <div class="program-card__content">
+              <p class="program-card__label">Тёплая зона</p>
+              <h3>Стол и поздравление</h3>
+              <p>После квеста дети отдыхают за столом с напитками и встречаются с Дедом Морозом.</p>
+            </div>
           </article>
         </div>
       </div>
@@ -153,16 +167,19 @@
       <div class="section-shell">
         <div class="moments__headline" data-reveal>
           <p class="section-kicker">После квеста</p>
-          <h2 id="moments-title">Что ребёнок<br>заберёт домой</h2>
+          <h2 id="moments-title">Открытка и подарок после квеста</h2>
         </div>
         <div class="moments__grid">
           <figure class="moment moment--workshop" data-reveal>
             <img src="assets/snow-mail-workshop.jpg" width="1200" height="900" loading="lazy" decoding="async" alt="Ребёнок создаёт новогоднюю открытку на мастер-классе">
             <figcaption><span>01</span> Открытка, сделанная своими руками</figcaption>
           </figure>
-          <div class="moments__quote" data-reveal>
-            <p>Открытка<br>и подарок</p>
-            <span>Мастер-класс и вручение входят в программу</span>
+          <div class="moments__gift" data-reveal>
+            <img src="assets/snow-mail-sweet-gift-2d.png" width="760" height="760" loading="lazy" decoding="async" alt="Иллюстрация персонального сладкого набора в красном мешочке">
+            <div>
+              <p>Сладкий подарок</p>
+              <span>Персональный набор вручат каждому участнику</span>
+            </div>
           </div>
           <figure class="moment moment--finale" data-reveal>
             <img src="assets/snow-mail-finale.jpg" width="1200" height="900" loading="lazy" decoding="async" alt="Дед Мороз вручает ребёнку новогодний подарок в финале квеста">
@@ -176,7 +193,7 @@
       <div class="section-shell price__grid">
         <div class="price__copy" data-reveal>
           <p class="section-kicker section-kicker--light">Кому подойдёт</p>
-          <h2 id="price-title">Оптимальная группа<br><span>10–15 детей</span></h2>
+          <h2 id="price-title">Группа из <span>10–15 детей</span></h2>
           <p>Программа рассчитана на детей от 6 лет. В группе из 10–15 человек аниматоры успевают вовлечь всю команду.</p>
           <ul class="check-list">
             <li>Для класса или компании друзей</li>
@@ -210,7 +227,7 @@
       <div class="section-shell request__grid">
         <div class="request__copy" data-reveal>
           <p class="section-kicker">Заявка на квест</p>
-          <h2 id="request-title">Оставьте заявку<br>на квест</h2>
+          <h2 id="request-title">Заявка на квест</h2>
           <p>Укажите дату и состав группы. Менеджер свяжется с вами, уточнит детали и подтвердит участие.</p>
           <div class="request__postmark" aria-hidden="true"><span>Получено</span><strong>Север</strong><small>14–30 XII</small></div>
         </div>
@@ -268,7 +285,7 @@
       <div class="section-shell faq__grid">
         <div>
           <p class="section-kicker">Условия участия</p>
-          <h2 id="faq-title">Вопросы<br>перед отправкой</h2>
+          <h2 id="faq-title">Ответы перед заявкой</h2>
         </div>
         <div class="faq__list">
           <details>
@@ -301,7 +318,7 @@
     </div>
   </footer>
 
-  <script src="config.js?v=20261106-3"></script>
-  <script src="script.js?v=20261106-3" defer></script>
+  <script src="config.js?v=20261106-6"></script>
+  <script src="script.js?v=20261106-6" defer></script>
 </body>
 </html>
