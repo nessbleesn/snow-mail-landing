@@ -85,6 +85,7 @@ def main():
         desktop.wait_for_timeout(250)
         assert abs(desktop.locator("[data-header]").bounding_box()["y"]) <= 1
         assert desktop.locator("[data-header]").bounding_box()["height"] <= 96
+        desktop.evaluate("document.documentElement.style.setProperty('--topbar-h', '1000px')")
         desktop.wait_for_timeout(500)
         assert desktop.locator("[data-header]").bounding_box()["height"] <= 96
         assert desktop.locator("[data-nav-section='price']").get_attribute("aria-current") == "location"
