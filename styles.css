@@ -3156,6 +3156,29 @@ summary {
   transform: rotate(-8deg);
 }
 
+.liquid-bauble__gift-star {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .liquid-bauble__icon--tree {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: festive-tree-glow 1.2s ease-in-out 1.7s 3 alternate;
+  }
+
+  .js .liquid-bauble__gift-star {
+    animation: festive-gift-twinkle 1s ease-in-out 2.1s 3;
+  }
+
+  .js .liquid-bauble__icon--candy {
+    transform-box: fill-box;
+    transform-origin: 50% 12%;
+    animation: festive-candy-sway 1.1s ease-in-out 2.4s 3;
+  }
+}
+
 .liquid-bauble__cap {
   position: absolute;
   z-index: -1;
@@ -3276,6 +3299,37 @@ summary {
   to { opacity: 1; transform: none; }
 }
 
+@keyframes festive-tree-glow {
+  from {
+    transform: scale(1);
+    filter: drop-shadow(0 0.25rem 0.45rem rgba(5, 15, 34, 0.22)) brightness(1);
+  }
+  to {
+    transform: scale(1.045);
+    filter: drop-shadow(0 0 0.62rem rgba(160, 235, 255, 0.82)) brightness(1.28);
+  }
+}
+
+@keyframes festive-gift-twinkle {
+  0%, 28%, 100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+    filter: drop-shadow(0 0 0 rgba(255, 213, 106, 0));
+  }
+  48% {
+    opacity: 1;
+    transform: scale(1.28) rotate(7deg);
+    filter: drop-shadow(0 0 0.28rem rgba(255, 225, 139, 0.92));
+  }
+  66% { transform: scale(0.96) rotate(-3deg); }
+}
+
+@keyframes festive-candy-sway {
+  0%, 100% { transform: rotate(-8deg); }
+  35% { transform: rotate(-14deg); }
+  70% { transform: rotate(-2deg); }
+}
+
 @keyframes hero-cta-sheen {
   from { transform: skewX(-18deg) translateX(-220%); }
   to { transform: skewX(-18deg) translateX(620%); }
@@ -3341,6 +3395,11 @@ summary {
 @media (prefers-reduced-motion: reduce) {
   .js .liquid-bauble {
     opacity: 1;
+    animation: none !important;
+  }
+
+  .liquid-bauble__icon,
+  .liquid-bauble__gift-star {
     animation: none !important;
   }
 
