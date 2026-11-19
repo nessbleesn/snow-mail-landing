@@ -102,6 +102,38 @@ def main():
         desktop.on("pageerror", lambda error: desktop_errors.append(f"pageerror:{error}"))
         desktop.on("requestfailed", lambda request: desktop_errors.append(f"requestfailed:{request.url}"))
         results["desktop"] = inspect_page(desktop, "desktop")
+        seo = desktop.evaluate(
+            """() => ({
+              title: document.title,
+              description: document.querySelector('meta[name="description"]')?.content,
+              robots: document.querySelector('meta[name="robots"]')?.content,
+              canonical: document.querySelector('link[rel="canonical"]')?.href,
+              ogTitle: document.querySelector('meta[property="og:title"]')?.content,
+              ogDescription: document.querySelector('meta[property="og:description"]')?.content,
+              ogImage: document.querySelector('meta[property="og:image"]')?.content,
+              ogImageWidth: document.querySelector('meta[property="og:image:width"]')?.content,
+              ogImageHeight: document.querySelector('meta[property="og:image:height"]')?.content,
+              twitterCard: document.querySelector('meta[name="twitter:card"]')?.content,
+              twitterImage: document.querySelector('meta[name="twitter:image"]')?.content,
+              schemas: [...document.querySelectorAll('script[type="application/ld+json"]')]
+                .map(script => JSON.parse(script.textContent))
+            })"""
+        )
+        assert 45 <= len(seo["title"]) <= 65, seo["title"]
+        assert 120 <= len(seo["description"]) <= 160, seo["description"]
+        assert "index" in seo["robots"] and "max-image-preview:large" in seo["robots"], seo["robots"]
+        assert seo["canonical"] == "https://parkskazka.ru/snow-mail/", seo["canonical"]
+        assert seo["ogTitle"] and seo["ogDescription"]
+        assert seo["ogImage"] == "https://parkskazka.ru/snow-mail/assets/snow-mail-social-v1.jpg"
+        assert seo["ogImageWidth"] == "1200" and seo["ogImageHeight"] == "630"
+        assert seo["twitterCard"] == "summary_large_image"
+        assert seo["twitterImage"] == seo["ogImage"]
+        schema_types = {
+            item.get("@type")
+            for schema in seo["schemas"]
+            for item in schema.get("@graph", [])
+        }
+        assert {"WebPage", "ImageObject", "Event", "WebSite"}.issubset(schema_types), schema_types
         desktop.goto(
             BASE_URL + "?utm_source=yandex&utm_medium=cpc&utm_campaign=snow-mail&utm_content=hero&utm_term=kids",
             wait_until="networkidle",
@@ -186,6 +218,7 @@ def main():
             <= mobile_media_box["y"] + mobile_media_box["height"] + 1
         ), (mobile_media_box, mobile_ornaments_box)
         assert mobile.locator(".hero__photo").evaluate("el => getComputedStyle(el).objectFit") == "cover"
+        assert mobile.locator(".site-header .brand").get_attribute("href") == "https://parkskazka.ru/meropriyatiya"
         assert mobile.locator(".header-phone").is_visible()
         assert mobile.locator(".header-phone").get_attribute("href") == "tel:+74951336560"
         assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "true"
