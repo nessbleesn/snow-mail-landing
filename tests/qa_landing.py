@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -75,12 +76,26 @@ def main():
 
         desktop_context = browser.new_context(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
         desktop = desktop_context.new_page()
+        lead_calls = []
+
+        def lead_success(route):
+            lead_calls.append(route.request.post_data_json)
+            route.fulfill(
+                status=200,
+                content_type="application/json",
+                body='{"ok":true,"leadId":12345}',
+            )
+
+        desktop.route("**/snow-mail/api/lead", lead_success)
         desktop_errors = []
         desktop.on("console", lambda msg: desktop_errors.append(f"console:{msg.type}:{msg.text}") if msg.type == "error" else None)
         desktop.on("pageerror", lambda error: desktop_errors.append(f"pageerror:{error}"))
         desktop.on("requestfailed", lambda request: desktop_errors.append(f"requestfailed:{request.url}"))
         results["desktop"] = inspect_page(desktop, "desktop")
-        desktop.goto(BASE_URL, wait_until="networkidle")
+        desktop.goto(
+            BASE_URL + "?utm_source=yandex&utm_medium=cpc&utm_campaign=snow-mail&utm_content=hero&utm_term=kids",
+            wait_until="networkidle",
+        )
         desktop.wait_for_timeout(500)
         desktop.screenshot(path=PREVIEW / "desktop-hero.png")
         desktop.locator("#price").scroll_into_view_if_needed()
@@ -109,7 +124,18 @@ def main():
         form.locator("input[name='consent']").check()
         form.locator("button[type='submit']").click()
         desktop.locator("#form-status[data-state='success']").wait_for(state="visible")
-        assert len(desktop.locator("#form-status").inner_text()) > 20
+        assert "Заявка отправлена" in desktop.locator("#form-status").inner_text()
+        assert len(lead_calls) == 1
+        lead = lead_calls[0]
+        assert lead["consent"] is True
+        assert lead["utm_source"] == "yandex"
+        assert lead["utm_medium"] == "cpc"
+        assert lead["utm_campaign"] == "snow-mail"
+        assert lead["utm_content"] == "hero"
+        assert lead["utm_term"] == "kids"
+        assert lead["elapsed_ms"] >= 700
+        assert re.fullmatch(r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}", lead["request_id"], re.I)
+        assert desktop.evaluate("window.dataLayer.some(item => item.event === 'snow_mail_lead_success' && item.lead_id === 12345)")
 
         desktop.locator("[data-group-range]").fill("10")
         assert "6 000" in desktop.locator("[data-unit-price]").inner_text()
@@ -133,6 +159,15 @@ def main():
         load_lazy_images(mobile)
         mobile.screenshot(path=PREVIEW / "mobile-hero.png")
         assert mobile.locator("[data-header]").is_visible()
+        assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "true"
+        mobile.locator("#program").scroll_into_view_if_needed()
+        mobile.wait_for_timeout(700)
+        assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "false"
+        assert "is-visible" in (mobile.locator("[data-mobile-cta]").get_attribute("class") or "")
+        mobile.screenshot(path=PREVIEW / "mobile-sticky-cta.png")
+        mobile.locator("[data-mobile-cta]").click()
+        mobile.wait_for_timeout(700)
+        assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "true"
         mobile.locator("#request").scroll_into_view_if_needed()
         mobile.wait_for_timeout(200)
         assert abs(mobile.locator("[data-header]").bounding_box()["y"]) <= 1

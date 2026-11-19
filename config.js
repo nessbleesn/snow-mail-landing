@@ -1,6 +1,6 @@
 window.SNOW_MAIL_CONFIG = {
-  formEndpoint: "",
-  demoMode: true,
+  formEndpoint: "/snow-mail/api/lead",
+  demoMode: false,
   event: {
     title: "Снежная почта",
     startsOn: "2026-12-14",
