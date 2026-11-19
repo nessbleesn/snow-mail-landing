@@ -119,29 +119,39 @@
     const heroActions = document.querySelector(".hero__actions");
     const requestSection = document.querySelector("#request");
     const footerCta = document.querySelector(".site-footer__cta");
-    const visibleZones = new Map([
-      [heroActions, true],
-      [requestSection, false],
-      [footerCta, false]
-    ]);
+
+    const isInViewport = (element) => {
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    };
 
     const updateMobileCta = () => {
-      const heroActionVisible = visibleZones.get(heroActions) ?? true;
-      const requestVisible = visibleZones.get(requestSection) ?? false;
-      const footerVisible = visibleZones.get(footerCta) ?? false;
+      const heroActionVisible = isInViewport(heroActions);
+      const requestVisible = isInViewport(requestSection);
+      const footerVisible = isInViewport(footerCta);
       const show = mobileViewport.matches && !heroActionVisible && !requestVisible && !footerVisible;
       mobileCta.classList.toggle("is-visible", show);
       mobileCta.setAttribute("aria-hidden", show ? "false" : "true");
       mobileCta.tabIndex = show ? 0 : -1;
     };
 
-    if ("IntersectionObserver" in window) {
-      const ctaObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => visibleZones.set(entry.target, entry.isIntersecting));
+    let mobileCtaFrame = 0;
+    const queueMobileCtaUpdate = () => {
+      if (mobileCtaFrame) return;
+      mobileCtaFrame = window.requestAnimationFrame(() => {
+        mobileCtaFrame = 0;
         updateMobileCta();
-      }, { threshold: 0.08 });
+      });
+    };
+
+    if ("IntersectionObserver" in window) {
+      const ctaObserver = new IntersectionObserver(queueMobileCtaUpdate, { threshold: 0.08 });
       [heroActions, requestSection, footerCta].filter(Boolean).forEach((node) => ctaObserver.observe(node));
     }
+
+    window.addEventListener("scroll", queueMobileCtaUpdate, { passive: true });
+    window.addEventListener("resize", queueMobileCtaUpdate, { passive: true });
 
     if (typeof mobileViewport.addEventListener === "function") {
       mobileViewport.addEventListener("change", updateMobileCta);

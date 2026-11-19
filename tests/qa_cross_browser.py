@@ -66,7 +66,7 @@ def inspect_mobile(page, name):
             rect: element.getBoundingClientRect().toJSON()
           }));
           const targets = [...document.querySelectorAll(
-            '.button, .text-link, .brand, .consent, .faq summary'
+            '.button, .text-link, .brand, .header-phone, .consent, .faq summary'
           )].filter(element => {
             const style = getComputedStyle(element);
             const rect = element.getBoundingClientRect();

@@ -159,9 +159,16 @@ def main():
         load_lazy_images(mobile)
         mobile.screenshot(path=PREVIEW / "mobile-hero.png")
         assert mobile.locator("[data-header]").is_visible()
+        assert mobile.locator(".header-phone").is_visible()
+        assert mobile.locator(".header-phone").get_attribute("href") == "tel:+74951336560"
         assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "true"
         mobile.locator("#program").scroll_into_view_if_needed()
         mobile.wait_for_timeout(700)
+        mobile.locator("#program").screenshot(path=PREVIEW / "mobile-program.png")
+        program_photo_ratio = mobile.locator(".program-card--photo").first.evaluate(
+            "el => el.querySelector('.program-card__photo').getBoundingClientRect().height / el.getBoundingClientRect().height"
+        )
+        assert program_photo_ratio >= 0.57, program_photo_ratio
         assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "false"
         assert "is-visible" in (mobile.locator("[data-mobile-cta]").get_attribute("class") or "")
         mobile.screenshot(path=PREVIEW / "mobile-sticky-cta.png")
@@ -177,6 +184,9 @@ def main():
         mobile.screenshot(path=PREVIEW / "mobile-full.png", full_page=True)
         mobile.locator("#story").screenshot(path=PREVIEW / "mobile-story.png")
         mobile.locator("#request").screenshot(path=PREVIEW / "mobile-form.png")
+        checkbox_box = mobile.locator(".consent input").bounding_box()
+        assert checkbox_box and abs(checkbox_box["width"] - checkbox_box["height"]) <= 1, checkbox_box
+        assert checkbox_box["width"] <= 22, checkbox_box
         assert not mobile_errors, mobile_errors
         mobile_context.close()
 
@@ -216,9 +226,11 @@ def main():
         stress_context = browser.new_context(viewport={"width": 320, "height": 720})
         stress = stress_context.new_page()
         results["stress_320"] = inspect_page(stress, "stress_320")
+        assert stress.locator(".header-phone").is_visible()
+        assert stress.locator(".header-phone").bounding_box()["width"] > 70
         assert stress.locator(".liquid-bauble--ice").is_visible()
-        assert stress.locator(".liquid-bauble--cranberry").is_hidden()
-        assert stress.locator(".liquid-bauble--gold").is_hidden()
+        assert stress.locator(".liquid-bauble--cranberry").is_visible()
+        assert stress.locator(".liquid-bauble--gold").is_visible()
         stress_context.close()
 
         forced_context = browser.new_context(viewport={"width": 390, "height": 844}, forced_colors="active")
