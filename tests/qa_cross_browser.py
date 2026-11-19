@@ -16,6 +16,7 @@ def mock_analytics(context):
         "https://top-fwz1.mail.ru/**",
         "https://privacy-cs.mail.ru/**",
         "https://mc.yandex.ru/**",
+        "**://cc.calltracking.ru/**",
     ):
         context.route(pattern, lambda route: route.fulfill(status=204, body=""))
 

@@ -15,6 +15,7 @@ def mock_analytics(context):
         "https://top-fwz1.mail.ru/**",
         "https://privacy-cs.mail.ru/**",
         "https://mc.yandex.ru/**",
+        "**://cc.calltracking.ru/**",
     ):
         context.route(pattern, lambda route: route.fulfill(status=204, body=""))
 
@@ -128,6 +129,7 @@ def main():
         assert seo["ogImageWidth"] == "1200" and seo["ogImageHeight"] == "630"
         assert seo["twitterCard"] == "summary_large_image"
         assert seo["twitterImage"] == seo["ogImage"]
+        assert desktop.locator('script[src*="cc.calltracking.ru/phone.4d847.16824.async.js"]').count() == 1
         schema_types = {
             item.get("@type")
             for schema in seo["schemas"]

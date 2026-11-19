@@ -51,6 +51,10 @@ def main():
                 "https://mc.yandex.ru/**",
                 lambda route: route.fulfill(status=200, content_type="application/javascript", body=""),
             )
+            page.route(
+                "**://cc.calltracking.ru/**",
+                lambda route: route.fulfill(status=200, content_type="application/javascript", body=""),
+            )
 
             def lead_success(route):
                 calls.append(route.request.post_data_json)
@@ -74,6 +78,9 @@ def main():
             assert page.evaluate(
                 "window.ym.a.some(args => args[0] === 107188789 && args[1] === 'init')"
             )
+            assert page.locator(
+                'script[src*="cc.calltracking.ru/phone.4d847.16824.async.js"]'
+            ).count() == 1
             page.evaluate(
                 """() => {
                   window.__leadSuccess = null;
