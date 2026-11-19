@@ -15,7 +15,7 @@ python -m http.server 8080
 
 ## Форма и Bitrix24
 
-Клиент отправляет JSON на same-origin endpoint `https://parkskazka.ru/snow-mail/api/lead`. Обработчик создаёт лид Bitrix24 и возвращает успешный ответ только после получения ID лида.
+Клиент на основном домене и зеркале GitHub Pages отправляет JSON на единый endpoint `https://parkskazka.ru/snow-mail/api/lead`. Обработчик создаёт лид Bitrix24 и возвращает успешный ответ только после получения ID лида.
 
 В лид передаются:
 

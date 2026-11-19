@@ -4,6 +4,7 @@ declare(strict_types=1);
 const ALLOWED_ORIGINS = [
     'https://parkskazka.ru',
     'https://www.parkskazka.ru',
+    'https://nessbleesn.github.io',
 ];
 const PUBLIC_PAGE_URL = 'https://parkskazka.ru/snow-mail/';
 const GENERIC_ERROR = 'Не удалось отправить заявку. Попробуйте ещё раз.';
@@ -125,7 +126,7 @@ function public_page_url(string $candidate): string
     }
     $host = strtolower($parts['host'] ?? '');
     if (($parts['scheme'] ?? '') !== 'https'
-        || !in_array($host, ['parkskazka.ru', 'www.parkskazka.ru'], true)
+        || !in_array($host, ['parkskazka.ru', 'www.parkskazka.ru', 'nessbleesn.github.io'], true)
         || isset($parts['user'])
         || isset($parts['pass'])) {
         return PUBLIC_PAGE_URL;

@@ -1,5 +1,5 @@
 window.SNOW_MAIL_CONFIG = {
-  formEndpoint: "/snow-mail/api/lead",
+  formEndpoint: "https://parkskazka.ru/snow-mail/api/lead",
   demoMode: false,
   event: {
     title: "Снежная почта",
