@@ -170,6 +170,22 @@ def main():
         load_lazy_images(mobile)
         mobile.screenshot(path=PREVIEW / "mobile-hero.png")
         assert mobile.locator("[data-header]").is_visible()
+        mobile_header_box = mobile.locator("[data-header]").bounding_box()
+        mobile_media_box = mobile.locator(".hero__media").bounding_box()
+        mobile_title_box = mobile.locator("#event-title").bounding_box()
+        mobile_ornaments_box = mobile.locator(".hero__liquid-decor").bounding_box()
+        assert mobile_header_box and mobile_media_box
+        assert abs(mobile_media_box["y"] - mobile_header_box["height"]) <= 1, (mobile_header_box, mobile_media_box)
+        assert 340 <= mobile_media_box["height"] <= 390, mobile_media_box
+        assert mobile_title_box and abs(
+            (mobile_media_box["y"] + mobile_media_box["height"])
+            - (mobile_title_box["y"] + mobile_title_box["height"])
+        ) <= 12, (mobile_media_box, mobile_title_box)
+        assert mobile_ornaments_box and (
+            mobile_ornaments_box["y"] + mobile_ornaments_box["height"]
+            <= mobile_media_box["y"] + mobile_media_box["height"] + 1
+        ), (mobile_media_box, mobile_ornaments_box)
+        assert mobile.locator(".hero__photo").evaluate("el => getComputedStyle(el).objectFit") == "cover"
         assert mobile.locator(".header-phone").is_visible()
         assert mobile.locator(".header-phone").get_attribute("href") == "tel:+74951336560"
         assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "true"

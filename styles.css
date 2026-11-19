@@ -4878,3 +4878,29 @@ summary {
     font-size: 12px;
   }
 }
+
+/* V15: natural mobile hero crop below the fixed header */
+@media (max-width: 620px) {
+  .hero::after {
+    display: none;
+  }
+
+  .hero__media {
+    inset: var(--fixed-header-total-h) 0 auto;
+    height: clamp(344px, 92vw, 382px);
+  }
+
+  .hero__media::after {
+    background:
+      linear-gradient(0deg, rgba(13, 25, 48, 0.72) 0%, rgba(13, 25, 48, 0.14) 40%, rgba(13, 25, 48, 0.08) 72%, rgba(13, 25, 48, 0.34) 100%),
+      linear-gradient(90deg, rgba(13, 25, 48, 0.18), transparent 72%);
+  }
+
+  .hero__photo {
+    object-position: 61% 46%;
+  }
+
+  .hero__liquid-decor {
+    top: clamp(264px, 70vw, 288px);
+  }
+}
