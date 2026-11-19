@@ -4782,11 +4782,36 @@ summary {
   min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
   color: var(--white);
   font-size: 0.86rem;
   font-weight: 750;
   line-height: 1;
   text-decoration: none;
+}
+
+.header-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.header-event svg {
+  width: 0.78rem;
+  height: 0.78rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.header-phone svg {
+  width: 0.88rem;
+  height: 0.88rem;
+  fill: currentColor;
+  stroke: none;
 }
 
 @media (hover: hover) and (pointer: fine) {

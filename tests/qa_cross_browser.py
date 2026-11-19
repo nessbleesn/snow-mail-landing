@@ -11,6 +11,15 @@ PREVIEW = ROOT / "preview" / "cross-browser"
 PREVIEW.mkdir(parents=True, exist_ok=True)
 
 
+def mock_analytics(context):
+    for pattern in (
+        "https://top-fwz1.mail.ru/**",
+        "https://privacy-cs.mail.ru/**",
+        "https://mc.yandex.ru/**",
+    ):
+        context.route(pattern, lambda route: route.fulfill(status=204, body=""))
+
+
 def collect_errors(page):
     errors = []
     page.on(
@@ -224,6 +233,7 @@ def main():
             browser_type = getattr(playwright, engine_name)
             browser = browser_type.launch(headless=True)
             context = browser.new_context(**context_options)
+            mock_analytics(context)
             page = context.new_page()
             errors = collect_errors(page)
             metrics = inspect_mobile(page, case_name)
@@ -244,6 +254,7 @@ def main():
 
         browser = playwright.webkit.launch(headless=True)
         reduced_context = browser.new_context(**playwright.devices["iPhone 13"], reduced_motion="reduce")
+        mock_analytics(reduced_context)
         reduced = reduced_context.new_page()
         load_page(reduced)
         reduced_names = reduced.evaluate(
@@ -259,6 +270,7 @@ def main():
         reduced_context.close()
 
         text_context = browser.new_context(**playwright.devices["iPhone SE"])
+        mock_analytics(text_context)
         text_page = text_context.new_page()
         text_page.goto(BASE_URL, wait_until="networkidle")
         text_page.add_style_tag(content="html { font-size: 200% !important; }")

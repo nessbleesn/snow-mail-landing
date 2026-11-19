@@ -295,6 +295,23 @@
     }
   }
 
+  function trackLeadSuccess() {
+    try {
+      window._tmr = window._tmr || [];
+      window._tmr.push({ type: "reachGoal", id: 3794718, goal: "lead-success" });
+    } catch (_) {
+      // Analytics must not affect the form result.
+    }
+
+    try {
+      if (typeof window.ym === "function") {
+        window.ym(107188789, "reachGoal", "snezhnaya_pochta_form_success");
+      }
+    } catch (_) {
+      // Analytics must not affect the form result.
+    }
+  }
+
   if (form) {
     captureAttribution();
 
@@ -333,6 +350,7 @@
             form_id: "lead-form",
             lead_id: result.leadId
           });
+          trackLeadSuccess();
           form.reset();
           captureAttribution();
         }

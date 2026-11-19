@@ -10,6 +10,15 @@ PREVIEW = ROOT / "preview"
 PREVIEW.mkdir(exist_ok=True)
 
 
+def mock_analytics(context):
+    for pattern in (
+        "https://top-fwz1.mail.ru/**",
+        "https://privacy-cs.mail.ru/**",
+        "https://mc.yandex.ru/**",
+    ):
+        context.route(pattern, lambda route: route.fulfill(status=204, body=""))
+
+
 def inspect_page(page, name: str):
     page.goto(BASE_URL, wait_until="networkidle")
     page.wait_for_timeout(500)
@@ -75,6 +84,7 @@ def main():
         browser = p.chromium.launch()
 
         desktop_context = browser.new_context(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
+        mock_analytics(desktop_context)
         desktop = desktop_context.new_page()
         lead_calls = []
 
@@ -148,6 +158,7 @@ def main():
         desktop_context.close()
 
         mobile_context = browser.new_context(viewport={"width": 390, "height": 844}, device_scale_factor=1)
+        mock_analytics(mobile_context)
         mobile = mobile_context.new_page()
         mobile_errors = []
         mobile.on("console", lambda msg: mobile_errors.append(f"console:{msg.type}:{msg.text}") if msg.type == "error" else None)
@@ -192,6 +203,7 @@ def main():
 
         for width, height in [(1024, 768), (768, 900)]:
             responsive_context = browser.new_context(viewport={"width": width, "height": height})
+            mock_analytics(responsive_context)
             responsive = responsive_context.new_page()
             results[f"responsive_{width}"] = inspect_page(responsive, f"responsive_{width}")
             responsive.evaluate("document.getElementById('price').scrollIntoView()")
@@ -200,6 +212,7 @@ def main():
             responsive_context.close()
 
         reference_context = browser.new_context(viewport={"width": 1047, "height": 729})
+        mock_analytics(reference_context)
         reference = reference_context.new_page()
         results["reference_1047"] = inspect_page(reference, "reference_1047")
         assert reference.locator(".dispatch-card").count() == 0
@@ -216,6 +229,7 @@ def main():
         reference_context.close()
 
         narrow_context = browser.new_context(viewport={"width": 360, "height": 800}, reduced_motion="reduce")
+        mock_analytics(narrow_context)
         narrow = narrow_context.new_page()
         results["narrow_reduced"] = inspect_page(narrow, "narrow_reduced")
         assert narrow.locator("[data-reveal]").first.is_visible()
@@ -224,6 +238,7 @@ def main():
         narrow_context.close()
 
         stress_context = browser.new_context(viewport={"width": 320, "height": 720})
+        mock_analytics(stress_context)
         stress = stress_context.new_page()
         results["stress_320"] = inspect_page(stress, "stress_320")
         assert stress.locator(".header-phone").is_visible()
@@ -234,12 +249,14 @@ def main():
         stress_context.close()
 
         forced_context = browser.new_context(viewport={"width": 390, "height": 844}, forced_colors="active")
+        mock_analytics(forced_context)
         forced = forced_context.new_page()
         forced.goto(BASE_URL, wait_until="networkidle")
         assert forced.locator(".hero__liquid-decor").is_hidden()
         forced_context.close()
 
         no_js_context = browser.new_context(viewport={"width": 390, "height": 844}, java_script_enabled=False)
+        mock_analytics(no_js_context)
         no_js = no_js_context.new_page()
         no_js.goto(BASE_URL, wait_until="networkidle")
         assert no_js.locator("#event-title").is_visible()

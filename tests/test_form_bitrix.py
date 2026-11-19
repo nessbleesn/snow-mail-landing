@@ -43,6 +43,14 @@ def main():
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             calls = []
+            page.route(
+                "https://top-fwz1.mail.ru/**",
+                lambda route: route.fulfill(status=200, content_type="application/javascript", body=""),
+            )
+            page.route(
+                "https://mc.yandex.ru/**",
+                lambda route: route.fulfill(status=200, content_type="application/javascript", body=""),
+            )
 
             def lead_success(route):
                 calls.append(route.request.post_data_json)
@@ -60,6 +68,12 @@ def main():
                 wait_until="networkidle",
             )
             page.wait_for_timeout(800)
+            assert page.evaluate(
+                "window._tmr.some(item => item.id === '3794718' && item.type === 'pageView')"
+            )
+            assert page.evaluate(
+                "window.ym.a.some(args => args[0] === 107188789 && args[1] === 'init')"
+            )
             page.evaluate(
                 """() => {
                   window.__leadSuccess = null;
@@ -94,6 +108,12 @@ def main():
             assert page.evaluate(
                 "window.dataLayer.some(item => item.event === 'snow_mail_lead_success' && item.lead_id === 12345)"
             )
+            assert page.evaluate(
+                "window._tmr.filter(item => item.type === 'reachGoal' && item.id === 3794718 && item.goal === 'lead-success').length === 1"
+            )
+            assert page.evaluate(
+                "window.ym.a.filter(args => args[0] === 107188789 && args[1] === 'reachGoal' && args[2] === 'snezhnaya_pochta_form_success').length === 1"
+            )
 
             page.goto(base, wait_until="networkidle")
             assert page.locator('[name="utm_source"]').input_value() == "yandex"
@@ -117,6 +137,12 @@ def main():
             assert "Не удалось отправить заявку" in page.locator("#form-status").inner_text()
             assert page.locator('[name="name"]').input_value() == "Тестовый клиент"
             assert calls[0]["request_id"] != calls[1]["request_id"]
+            assert page.evaluate(
+                "!window._tmr.some(item => item.type === 'reachGoal' && item.goal === 'lead-success')"
+            )
+            assert page.evaluate(
+                "!window.ym.a.some(args => args[1] === 'reachGoal' && args[2] === 'snezhnaya_pochta_form_success')"
+            )
             assert not errors, errors
             browser.close()
     finally:
