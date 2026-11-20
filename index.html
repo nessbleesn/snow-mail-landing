@@ -160,16 +160,28 @@
   <!-- /Yandex.Metrika counter -->
 
   <!-- Calltracking.ru -->
-  <script async type="text/javascript">
-    (function ct_load_script() {
-      var ct = document.createElement("script");
-      ct.type = "text/javascript";
-      ct.async = true;
-      ct.rel = "preload";
-      ct.src = document.location.protocol + "//cc.calltracking.ru/phone.4d847.16824.async.js?nc=" + Math.floor(new Date().getTime() / 300000);
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(ct, s);
-    })();
+  <script src="assets/vendor/jquery-3.7.1.min.js" defer></script>
+  <script>
+    (function ct_load_script(d, w, id) {
+      function loadCalltracking() {
+        if (!w.jQuery || d.getElementById(id)) return;
+
+        var ct = d.createElement("script");
+        ct.type = "text/javascript";
+        ct.async = true;
+        ct.rel = "preload";
+        ct.id = id;
+        ct.src = d.location.protocol + "//cc.calltracking.ru/phone.4d847.16824.async.js?nc=" + Math.floor(new Date().getTime() / 300000);
+        var s = d.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(ct, s);
+      }
+
+      if (d.readyState === "loading") {
+        d.addEventListener("DOMContentLoaded", loadCalltracking, { once: true });
+      } else {
+        loadCalltracking();
+      }
+    })(document, window, "calltracking-script");
   </script>
   <!-- /Calltracking.ru -->
 </head>
