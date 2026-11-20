@@ -222,7 +222,7 @@ def main():
         assert mobile.locator(".hero__photo").evaluate("el => getComputedStyle(el).objectFit") == "cover"
         assert mobile.locator(".site-header .brand").get_attribute("href") == "https://parkskazka.ru/meropriyatiya"
         assert mobile.locator(".header-phone").is_visible()
-        assert mobile.locator(".header-phone").get_attribute("href") == "tel:+74951336560"
+        assert mobile.locator(".header-phone").get_attribute("href") == "tel:+74951336556"
         assert mobile.locator("[data-mobile-cta]").get_attribute("aria-hidden") == "true"
         mobile.locator("#program").scroll_into_view_if_needed()
         mobile.wait_for_timeout(700)
